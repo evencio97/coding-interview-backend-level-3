@@ -1,5 +1,5 @@
 import Hapi from '@hapi/hapi'
-import routes from './routes'
+import { defineRoutes } from './routes'
 import { preResponse } from './helpers/preResponse';
 import { postResponse } from './helpers/postResponse';
 import { connectDB } from './database/mongodb';
@@ -18,14 +18,14 @@ const getServer = () => {
                 }
             }
         }
-    })
+    });
     // For error handling purposes
     server.ext('onPreResponse', preResponse);
     server.ext('onPostResponse', postResponse);
     // Define routes
-    routes(server)
+    defineRoutes(server);
 
-    return server
+    return server;
 }
 
 export const initializeServer = async () => {

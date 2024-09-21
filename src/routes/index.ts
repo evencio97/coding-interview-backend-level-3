@@ -1,11 +1,9 @@
 import { Server } from "@hapi/hapi"
-import ping from "./ping"
-import item from "./item"
+import { pingRoutes } from "./ping"
+import { itemRoutes } from "./item";
 
 
-export default (server: Server) => {
-    // Define PING routes
-    ping(server);
-    // Define PING routes
-    item(server);
+export const defineRoutes = (server: Server) => {
+    // Define routes
+    [pingRoutes, itemRoutes].forEach(e => e.defineAll(server));
 }

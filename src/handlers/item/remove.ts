@@ -1,11 +1,10 @@
 import Boom from "@hapi/boom";
-import { Route, RouteHandler, RouteMethod } from "../../classes/Route";
 import { Item } from "../../models/Item";
 import { ItemErrors } from "../../interfaces/itemErrors";
-import { validations } from "../../validations/item";
+import { RouteHandler } from "../../interfaces/interfaces";
 
 
-const handler: RouteHandler = async (request, h) => {
+const itemRemove: RouteHandler = async (request, h) => {
     const itemId = parseInt(request.params.itemId);
     // Delete
     if (!(await Item.deleteOne({id: itemId}).exec())?.deletedCount)
@@ -14,11 +13,4 @@ const handler: RouteHandler = async (request, h) => {
     return h.response().code(204);
 }
 
-export default new Route(
-    RouteMethod.DELETE, "/items/{itemId}", handler,
-    {
-        validate: {
-            params: validations.paramsItemId
-        }
-    }
-);
+export { itemRemove };

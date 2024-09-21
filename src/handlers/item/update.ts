@@ -1,12 +1,10 @@
-import Joi from "joi";
 import Boom from "@hapi/boom";
-import { Route, RouteHandler, RouteMethod } from "../../classes/Route";
 import { IItem, Item } from "../../models/Item";
 import { ItemErrors } from "../../interfaces/itemErrors";
-import { validations } from "../../validations/item";
+import { RouteHandler } from "../../interfaces/interfaces";
 
 
-const handler: RouteHandler = async (request, h) => {
+const itemUpdate: RouteHandler = async (request, h) => {
     const itemId = parseInt(request.params.itemId);
     const payload = <IItem> request.payload;
     if (!(payload.name || payload.price))
@@ -28,15 +26,4 @@ const handler: RouteHandler = async (request, h) => {
     return result.toObject();
 }
 
-export default new Route(
-    RouteMethod.PUT, "/items/{itemId}", handler,
-    {
-        validate: {
-            payload: Joi.object({
-                name: validations.name,
-                price: validations.price
-            }).options({ stripUnknown: true }),
-            params: validations.paramsItemId,
-        }
-    }
-);
+export { itemUpdate }
