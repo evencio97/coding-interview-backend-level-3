@@ -1,13 +1,29 @@
 import Hapi from '@hapi/hapi'
-import { defineRoutes } from './routes'
+import routes from './routes'
+import { preResponse } from './helpers/preResponse';
+import { postResponse } from './helpers/postResponse';
+import { connectDB } from './database/mongodb';
+import { handleValidationErrors } from './helpers/handleValidationErrors';
+
 
 const getServer = () => {
     const server = Hapi.server({
         host: 'localhost',
         port: 3000,
+        routes: {
+            validate: {
+                failAction: handleValidationErrors,
+                options: {
+                    abortEarly: false
+                }
+            }
+        }
     })
-
-    defineRoutes(server)
+    // For error handling purposes
+    server.ext('onPreResponse', preResponse);
+    server.ext('onPostResponse', postResponse);
+    // Define routes
+    routes(server)
 
     return server
 }
@@ -15,6 +31,7 @@ const getServer = () => {
 export const initializeServer = async () => {
     const server = getServer()
     await server.initialize()
+    await connectDB();
     return server
 }
 
